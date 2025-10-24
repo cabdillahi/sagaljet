@@ -1,0 +1,113 @@
+// Define the datasource
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Define the generator
+generator client {
+  provider = "prisma-client-js" // This generates the Prisma Client
+}
+
+// Define the Role enum
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
+}
+
+// Define the User model
+model user {
+  id       Int      @id @default(autoincrement())
+  userName String
+  email    String   @unique
+  password String
+  role     Role     @default(USER)
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+}
+
+// Define the Project model
+model project {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  imageUrl    String[]
+  link        String?
+  createAt    DateTime @default(now())
+  updateAt    DateTime @updatedAt
+  industry    String?
+  order       Int?
+  categoryId  Int
+  category    category @relation(fields: [categoryId], references: [id])
+
+  client String
+}
+
+model Logo {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  imageUrl    String
+  color       String?
+  createAt    DateTime @default(now())
+  updateAt    DateTime @updatedAt
+}
+
+// Define the Team model
+model team {
+  id          Int      @id @default(autoincrement())
+  name        String
+  skill       String
+  description String?
+  order       Int?
+  imageUrl    String // Storing the image URL instead of photo
+  createAt    DateTime @default(now())
+  updateAt    DateTime @updatedAt
+}
+
+// Define the Client model
+model client {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  logoUrl     String // Storing the logo URL
+  createAt    DateTime @default(now())
+  updateAt    DateTime @updatedAt
+}
+
+// category Model
+
+model category {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  createAt    DateTime @default(now())
+  updateAt    DateTime @updatedAt
+
+  //relationship
+  project project[]
+}
+
+//job model
+
+model job {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  link        String
+  isActive    Boolean  @default(true)
+  createAt    DateTime @default(now())
+  updateAt    DateTime @updatedAt
+}
+
+model blog {
+  id       Int      @id @default(autoincrement())
+  title    String
+  content  String
+  slug     String?
+  author   String
+  image    String?
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+}
