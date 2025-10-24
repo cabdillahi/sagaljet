@@ -65,15 +65,15 @@ export function PortfolioGrid() {
   ];
 
   return (
-    <div className="relative h-[600px] lg:h-[700px] overflow-hidden rounded-lg">
-      <div className="grid grid-cols-3 gap-4 h-full">
+    <div className="relative h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden rounded-lg">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 md:gap-4 h-full">
         {/* Column 1 - Slides Up */}
         <div className="relative overflow-hidden">
-          <div className="animate-portfolio-slide-up space-y-4">
+          <div className="animate-portfolio-slide-up space-y-2 sm:space-y-3 md:space-y-4">
             {[...column1Images, ...column1Images].map((item, index) => (
               <div
                 key={index}
-                className={`${item.color} rounded-lg p-6 h-[280px] flex items-center justify-center`}
+                className={`${item.color} rounded-lg p-3 sm:p-4 md:p-6 h-[180px] sm:h-[220px] md:h-[280px] flex items-center justify-center`}
               >
                 <img
                   src={item.url || "/placeholder.svg"}
@@ -88,13 +88,13 @@ export function PortfolioGrid() {
         {/* Column 2 - Slides Down */}
         <div className="relative overflow-hidden">
           <div
-            className="animate-portfolio-slide-down space-y-4"
+            className="animate-portfolio-slide-down space-y-2 sm:space-y-3 md:space-y-4"
             style={{ transform: "translateY(-50%)" }}
           >
             {[...column2Images, ...column2Images].map((item, index) => (
               <div
                 key={index}
-                className={`${item.color} rounded-lg p-6 h-[280px] flex items-center justify-center`}
+                className={`${item.color} rounded-lg p-3 sm:p-4 md:p-6 h-[180px] sm:h-[220px] md:h-[280px] flex items-center justify-center`}
               >
                 <img
                   src={item.url || "/placeholder.svg"}
@@ -107,12 +107,12 @@ export function PortfolioGrid() {
         </div>
 
         {/* Column 3 - Slides Up */}
-        <div className="relative overflow-hidden">
-          <div className="animate-portfolio-slide-up space-y-4">
+        <div className="relative overflow-hidden hidden lg:block">
+          <div className="animate-portfolio-slide-up space-y-2 sm:space-y-3 md:space-y-4">
             {[...column3Images, ...column3Images].map((item, index) => (
               <div
                 key={index}
-                className={`${item.color} rounded-lg p-6 h-[280px] flex items-center justify-center`}
+                className={`${item.color} rounded-lg p-3 sm:p-4 md:p-6 h-[180px] sm:h-[220px] md:h-[280px] flex items-center justify-center`}
               >
                 <img
                   src={item.url || "/placeholder.svg"}

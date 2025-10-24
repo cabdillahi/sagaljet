@@ -233,3 +233,35 @@
 .animate-portfolio-slide-down {
   animation: portfolio-slide-down 20s linear infinite;
 }
+
+@keyframes logo-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-100% / 3));
+  }
+}
+
+@layer utilities {
+  .animate-portfolio-slide-up {
+    animation: portfolio-slide-up 30s linear infinite;
+  }
+
+  .animate-portfolio-slide-down {
+    animation: portfolio-slide-down 30s linear infinite;
+  }
+
+  /* Responsive logo scroll animations with different speeds */
+  .animate-logo-scroll-mobile {
+    animation: logo-scroll 15s linear infinite;
+  }
+
+  .animate-logo-scroll-tablet {
+    animation: logo-scroll 20s linear infinite;
+  }
+
+  .animate-logo-scroll-desktop {
+    animation: logo-scroll 30s linear infinite;
+  }
+}
