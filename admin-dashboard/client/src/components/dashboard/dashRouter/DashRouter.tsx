@@ -6,12 +6,10 @@ import Sidebar from "../sidebar/Sidebar";
 export default function DashRouter() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
-//not access if the user not exist
-//not access if the user not exist
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userInfo")!)?.token;
     if (!user) {
-      navigate("/landing/skillup/authentication");
+      navigate("/auth");
     }
   }, [navigate]);
 

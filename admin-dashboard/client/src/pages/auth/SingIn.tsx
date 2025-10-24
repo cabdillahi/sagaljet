@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,33 +10,36 @@ import { resetSingIn, singInFn } from "../../redux/slices/auth/SingIn";
 import { setUser } from "../../redux/slices/auth/UserInfo";
 import type { RootState } from "@/redux/store";
 
-export default function SignIn() {
+export default function AuthPage() {
   const singIn = useSelector((state: RootState) => state.singin);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const toastId = "authToast";
 
+  const [isLogin, _] = useState(true);
+  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const user = JSON.parse(localStorage.getItem("userInfo") || "{}")?.token;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const data = isLogin ? { email, password } : { userName, email, password };
 
-    const data = {
-      email,
-      password,
-    };
-
-    //@ts-ignore
-    dispatch(singInFn(data));
+    if (isLogin) {
+      // @ts-ignore
+      dispatch(singInFn(data));
+    } else {
+      // @ts-ignore
+      // dispatch(signUpFn(data));
+      toast.success("Account created (demo only)!", { id: toastId });
+    }
   };
-
-  const navigate = useNavigate();
-  const toastId = "toastsingIn";
-
-  const user = JSON.parse(localStorage.getItem("userInfo")!)?.token;
 
   useEffect(() => {
     if (singIn?.isSuccess) {
-      toast.success("success", { id: toastId });
+      toast.success("Login successful!", { id: toastId });
       const { userName, email, token, role }: any = singIn.data;
       dispatch(setUser({ userName, email, token, role }));
       navigate("/");
@@ -48,9 +51,9 @@ export default function SignIn() {
     }
 
     if (singIn?.isError) {
-      toast.error(singIn?.message, { id: toastId });
+      toast.error(singIn?.message || "Login failed", { id: toastId });
     }
-  }, [singIn?.isError, singIn?.message, singIn?.isSuccess, dispatch]);
+  }, [singIn?.isError, singIn?.message, singIn?.isSuccess, dispatch, navigate]);
 
   return (
     <div className="relative h-screen w-full overflow-hidden">
@@ -58,24 +61,36 @@ export default function SignIn() {
         <div className="h-full w-1/2 bg-[#1F1F70] float-left"></div>
         <div className="h-full w-1/2 bg-[#CCE4FF] float-right"></div>
       </div>
+
       <div className="relative z-10 flex h-full items-center justify-center">
         <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-primary">skillUp</h1>
-            <h2 className="text-2xl font-semibold mt-2 text-foreground">
-              Welcome Back
-            </h2>
+          <div className="mb-8 text-center">
+            <h1 className="text-3xl font-bold text-primary">
+              {isLogin ? "Welcome Back 👋" : "Create an Account ✨"}
+            </h1>
+            <p className="text-muted-foreground mt-2">
+              {isLogin
+                ? "Please log in to your account"
+                : "Sign up to get started"}
+            </p>
           </div>
 
-          <div className="relative my-4">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-border" />
-            </div>
-          </div>
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            {!isLogin && (
+              <div className="space-y-2">
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  id="username"
+                  placeholder="Your Name"
+                  required
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                />
+              </div>
+            )}
 
-          <form className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Your Email</Label>
+              <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 placeholder="Email"
@@ -85,21 +100,26 @@ export default function SignIn() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+
             <div className="space-y-2">
-              <Label htmlFor="password">Your Password</Label>
+              <Label htmlFor="password">Password</Label>
               <Input
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 id="password"
-                placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;"
+                placeholder="••••••••"
                 required
                 type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
 
-            <Button onClick={handleSubmit} className="w-full">
-              Log In
-              <ArrowRight className="w-4 h-4 ml-2" />
+            <Button
+              disabled={singIn.isLoading}
+              type="submit"
+              className="w-full"
+            >
+              {singIn.isLoading ? (<Loader2Icon className="animate-spin"/>): "Log In"}
+              {singIn.isLoading ? "" : <ArrowRight className="w-4 h-4 ml-2" />}
             </Button>
           </form>
         </div>
