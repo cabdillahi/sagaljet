@@ -13,7 +13,7 @@ const initialState = {
 // Async function for sign-up
 export const deleteProjectFn = createAsyncThunk(
   "deleteProject",
-  async (id, { rejectWithValue }) => {
+  async (id: any, { rejectWithValue }) => {
     try {
       const response = await axios.delete(
         `${url}/project/delete-project/${parseInt(id)}`
@@ -43,7 +43,6 @@ export const deleteProjectSlice = createSlice({
       state.isLoading = true;
       state.isError = false;
       state.isSuccess = false;
-      state.message = {}; // Clear previous errors
     });
     builder.addCase(deleteProjectFn.fulfilled, (state, action) => {
       state.isLoading = false;
@@ -53,7 +52,7 @@ export const deleteProjectSlice = createSlice({
     builder.addCase(deleteProjectFn.rejected, (state, action) => {
       state.isLoading = false;
       state.isError = true;
-      state.message = action.payload;
+      state.message = Object(action.payload);
     });
   },
 });

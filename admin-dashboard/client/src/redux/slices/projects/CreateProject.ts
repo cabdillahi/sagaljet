@@ -13,7 +13,7 @@ const initialState = {
 // Async function for creating Project
 export const createProjectFn = createAsyncThunk(
   "createProject",
-  async (data, { rejectWithValue }) => {
+  async (data: any, { rejectWithValue }) => {
     try {
       const formData = new FormData();
       formData.append("name", data.name);
@@ -28,7 +28,7 @@ export const createProjectFn = createAsyncThunk(
         formData.append("imageUrl", data.imageUrl[i]);
       }
 
-      const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
+      const token = JSON.parse(localStorage.getItem("userInfo")!)?.token;
 
       const response = await axios.post(
         `${url}/project/add-project`,
@@ -64,7 +64,6 @@ export const createProjectSlice = createSlice({
       state.isLoading = true;
       state.isError = false;
       state.isSuccess = false;
-      state.message = {}; // Clear previous errors
     });
     builder.addCase(createProjectFn.fulfilled, (state, action) => {
       state.isLoading = false;
@@ -74,7 +73,7 @@ export const createProjectSlice = createSlice({
     builder.addCase(createProjectFn.rejected, (state, action) => {
       state.isLoading = false;
       state.isError = true;
-      state.message = action.payload;
+      state.message = Object(action.payload);
     });
   },
 });

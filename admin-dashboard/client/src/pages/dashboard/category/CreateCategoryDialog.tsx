@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -6,60 +6,63 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Link } from 'react-router-dom'
-import { PlusCircle } from 'lucide-react'
-import { useDispatch, useSelector } from 'react-redux'
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   createCategoryFn,
   resetCreateCategory,
-} from '@/redux/slices/category/CreateCategory'
-import toast from 'react-hot-toast'
-import { getCategoryFn } from '@/redux/slices/category/GetCategory'
+} from "@/redux/slices/category/CreateCategory";
+import { getCategoryFn } from "@/redux/slices/category/GetCategory";
+import type { RootState } from "@/redux/store";
+import { PlusCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const CreateCategoryDialog = () => {
-  const [isOpen, setIsOpen] = useState(false)
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const createClient = useSelector((state) => state.createCategory)
-  const dispatch = useDispatch()
+  const [isOpen, setIsOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const createClient = useSelector((state: RootState) => state.createCategory);
+  const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleSubmit = (e:React.FormEvent) => {
+    e.preventDefault();
 
     const data = {
       description,
       name,
-    }
+    };
 
-    dispatch(createCategoryFn(data))
-  }
+    //@ts-ignore
+    dispatch(createCategoryFn(data));
+  };
 
-  const toastId = 'toastsingIn'
+  const toastId = "toastsingIn";
 
   useEffect(() => {
     if (createClient?.isSuccess) {
-      toast.success('success', { id: toastId })
-      dispatch(getCategoryFn())
-      setIsOpen(false)
-      dispatch(resetCreateCategory())
-      setDescription('')
-      setName('')
+      toast.success("success", { id: toastId });
+      //@ts-ignore
+      dispatch(getCategoryFn());
+      setIsOpen(false);
+      dispatch(resetCreateCategory());
+      setDescription("");
+      setName("");
     }
 
     if (createClient?.isError) {
-      toast.error(createClient?.message, { id: toastId })
+      toast.error(createClient?.message, { id: toastId });
     }
   }, [
     createClient?.isError,
     createClient?.message,
     createClient?.isSuccess,
     dispatch,
-  ])
+  ]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -112,7 +115,7 @@ const CreateCategoryDialog = () => {
         </form>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default CreateCategoryDialog
+export default CreateCategoryDialog;

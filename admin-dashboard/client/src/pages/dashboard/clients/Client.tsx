@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom'
-import { PlusCircle, Pencil, Trash2 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -8,35 +8,36 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { useState, useEffect } from 'react'
-import { getClientFn } from '@/redux/slices/clients/GetClient'
-import { useDispatch, useSelector } from 'react-redux'
-import CreateDialogClient from './CreateDialogClient'
-import DeleteDialogClinet from './DeleteDialogClient'
-import UpdateDialogClient from './UpdateDialogClient'
+} from "@/components/ui/table";
+import { getClientFn } from "@/redux/slices/clients/GetClient";
+import type { RootState } from "@/redux/store";
+import { Pencil, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import CreateDialogClient from "./CreateDialogClient";
+import DeleteDialogClinet from "./DeleteDialogClient";
+import UpdateDialogClient from "./UpdateDialogClient";
 
 export default function Client() {
-  const [isMobile, setIsMobile] = useState(false)
-  const client = useSelector((state) => state.getClient)
-  const disptach = useDispatch()
+  const [isMobile, setIsMobile] = useState(false);
+  const client = useSelector((state: RootState) => state.getClient);
+  const disptach = useDispatch();
 
   useEffect(() => {
-    disptach(getClientFn())
+    //@ts-ignore
+    disptach(getClientFn());
     const checkIsMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
-    checkIsMobile()
-    window.addEventListener('resize', checkIsMobile)
-    return () => window.removeEventListener('resize', checkIsMobile)
-  }, [disptach])
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkIsMobile();
+    window.addEventListener("resize", checkIsMobile);
+    return () => window.removeEventListener("resize", checkIsMobile);
+  }, [disptach]);
 
-  const handleDelete = (clientId) => {
+  const handleDelete = (clientId: any) => {
     // Implement delete functionality here
-    console.log(`Delete client with ID: ${clientId}`)
-  }
+    console.log(`Delete client with ID: ${clientId}`);
+  };
 
   return (
     <div className="container mx-auto py-10">
@@ -63,10 +64,10 @@ export default function Client() {
                     </div>
                     <div className="flex space-x-2">
                       <Button variant="outline" size="icon" asChild>
-                        <Link href={`/dashboard/clients/edit/${client.id}`}>
+                        {/* <Link to={`/dashboard/clients/edit/${client.id}`}> */}
                           <Pencil className="h-4 w-4" />
                           <span className="sr-only">Edit</span>
-                        </Link>
+                        {/* </Link> */}
                       </Button>
                       <Button
                         variant="outline"
@@ -143,5 +144,5 @@ export default function Client() {
         </div>
       )}
     </div>
-  )
+  );
 }

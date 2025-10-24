@@ -24,11 +24,6 @@ import { getBlogSlice } from "./slices/blog/GetBlog";
 import { getOneBlogSlice } from "./slices/blog/GetOneBlog";
 import { updateBlogSlice } from "./slices/blog/UpdateBlog";
 import { deleteBlogSlice } from "./slices/blog/DeleteBlog";
-import { createLogoSlice } from "./slices/logo/CreateLogo";
-import { getLogoSlice } from "./slices/logo/GetLogo";
-import { getOneLogoSlice } from "./slices/logo/GetOneLogo";
-import { updateLogoSlice } from "./slices/logo/UpdateLogo";
-import { deleteLogoSlice } from "./slices/logo/DeleteLogo";
 import { updateOrderTeam } from "./slices/teams/Team-Order";
 import { updateOrderProject } from "./slices/projects/Project-Order";
 import { singInSlice } from "./slices/auth/SingIn";
@@ -90,13 +85,6 @@ export const store = configureStore({
     getOneBlog: getOneBlogSlice.reducer,
     updateBlog: updateBlogSlice.reducer,
     deleteBlog: deleteBlogSlice.reducer,
-
-    //Logos
-    createLogo: createLogoSlice.reducer,
-    getAllLogos: getLogoSlice.reducer,
-    getOneLogo: getOneLogoSlice.reducer,
-    updateLogo: updateLogoSlice.reducer,
-    deleteLogo: deleteLogoSlice.reducer,
   },
   // devTools: false,
 });

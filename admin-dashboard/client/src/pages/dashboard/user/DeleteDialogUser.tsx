@@ -4,11 +4,12 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { deleteUserFn } from '@/redux/slices/users/deleteUser';
 
-export default function DeleteDialogUser({ userId }) {
+export default function DeleteDialogUser({ userId }:any) {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
 
   const handleDelete = () => {
+    //@ts-ignore
     dispatch(deleteUserFn(userId));
     setOpen(false);
   };

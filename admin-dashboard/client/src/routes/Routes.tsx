@@ -1,22 +1,19 @@
+import Category from "@/pages/dashboard/category/Category";
+import Client from "@/pages/dashboard/clients/Client";
+import Main from "@/pages/dashboard/main/Main";
+import Team from "@/pages/dashboard/team/team";
 import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
-import About from "../pages/about/About";
-import Homepage from "../pages/landingPage/home/Homepage";
-import Service from "../pages/service/Service";
 import DashRouter from "../components/dashboard/dashRouter/DashRouter";
-import Logo from "../pages/dashboard/logo/Logo";
-import Team from "../pages/dashboard/team/team";
-import Category from "../pages/dashboard/category/Category";
-import User from "../pages/dashboard/user/User";
-import Client from "../pages/dashboard/clients/Client";
 import AdminBlog from "../pages/dashboard/blog/AdminBlog";
 import Project from "../pages/dashboard/projects/Projects";
-import Main from "../pages/dashboard/main/Main";
+import User from "../pages/dashboard/user/User";
+import Homepage from "../pages/landingPage/home/Homepage";
 
 // Main Layout with Navbar/Footer
 const Router = () => {
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="flex flex-grow">
+      <div className="flex ">
         <Outlet />
       </div>
     </div>
@@ -51,10 +48,10 @@ export const router = createBrowserRouter([
         path: "team",
         element: <Team />,
       },
-      {
-        path: "logos",
-        element: <Logo />,
-      },
+      // {
+      //   path: "logos",
+      //   element: <Logo />,
+      // },
       {
         path: "category",
         element: <Category />,
@@ -80,10 +77,6 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <Homepage />,
-      },
-      {
-        path: "service",
-        element: <Service />,
       },
     ],
   },

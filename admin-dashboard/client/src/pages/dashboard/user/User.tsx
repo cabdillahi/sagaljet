@@ -16,13 +16,15 @@ import { useDispatch, useSelector } from "react-redux";
 import CreateDialogUser from "./CreateDialogUser";
 import DeleteDialogUser from "./DeleteDialogUser";
 import UpdateDialogUser from "./UpdateDialogUser";
+import type { RootState } from "@/redux/store";
 
 export default function User() {
   const [isMobile, setIsMobile] = useState(false);
-  const user = useSelector((state) => state.getUser);
+  const user = useSelector((state: RootState) => state.getUser);
   const dispatch = useDispatch();
 
   useEffect(() => {
+    //@ts-ignore
     dispatch(getUserFn());
     const checkIsMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -31,10 +33,6 @@ export default function User() {
     window.addEventListener("resize", checkIsMobile);
     return () => window.removeEventListener("resize", checkIsMobile);
   }, [dispatch]);
-
-  const handleDelete = (userId) => {
-    console.log(`Delete user with ID: ${userId}`);
-  };
 
   return (
     <div className="container mx-auto py-10">
@@ -114,7 +112,7 @@ export default function User() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[80px]">ID</TableHead>
+                    <TableHead className="">ID</TableHead>
                     <TableHead className="min-w-[200px]">User</TableHead>
                     <TableHead className="min-w-[200px]">Email</TableHead>
                     <TableHead className="w-[100px]">Role</TableHead>

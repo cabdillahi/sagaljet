@@ -1,58 +1,60 @@
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { resetSingUp, singUpFn } from '@/redux/slices/auth/SingUp'
-import { getUserFn } from '@/redux/slices/users/getUser'
-import { useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
-import { useDispatch, useSelector } from 'react-redux'
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { resetSingUp, singUpFn } from "@/redux/slices/auth/SingUp";
+import { getUserFn } from "@/redux/slices/users/getUser";
+import type { RootState } from "@/redux/store";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function CreateDialogUser() {
-  const singUp = useSelector((state) => state.singup)
-  const dispatch = useDispatch()
-  const [open, setOpen] = useState(false)
-  const [userName, setUserName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [role, setRole] = useState('')
+  const singUp = useSelector((state: RootState) => state.singup);
+  const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
 
     const data = {
       email,
       password,
       userName,
       role,
-    }
+    };
+    //@ts-ignore
+    dispatch(singUpFn(data));
+  };
 
-    dispatch(singUpFn(data))
-  }
-
-  const toastId = 'toastsingUp'
+  const toastId = "toastsingUp";
 
   useEffect(() => {
     if (singUp?.isSuccess) {
-      toast.success('success', { id: toastId })
-      dispatch(resetSingUp())
-      dispatch(getUserFn())
-      setOpen(false)
-      setRole('')
-      setPassword('')
-      setEmail('')
-      setUserName('')
+      toast.success("success", { id: toastId });
+      dispatch(resetSingUp());
+      //@ts-ignore
+      dispatch(getUserFn());
+      setOpen(false);
+      setRole("");
+      setPassword("");
+      setEmail("");
+      setUserName("");
     }
 
     if (singUp?.isError) {
-      toast.error(singUp?.message, { id: toastId })
+      toast.error(singUp?.message, { id: toastId });
     }
-  }, [singUp?.isError, singUp?.message, singUp?.isSuccess, dispatch])
+  }, [singUp?.isError, singUp?.message, singUp?.isSuccess, dispatch]);
 
   return (
     <>
@@ -102,5 +104,5 @@ export default function CreateDialogUser() {
         </DialogContent>
       </Dialog>
     </>
-  )
+  );
 }

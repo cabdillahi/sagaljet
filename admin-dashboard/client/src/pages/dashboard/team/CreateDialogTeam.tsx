@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -6,80 +6,82 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Link, useNavigate } from 'react-router-dom'
-import { PlusCircle } from 'lucide-react'
-import { createTeamFn, resetCreateTeam } from '@/redux/slices/teams/CreateTeam'
-import toast from 'react-hot-toast'
-import { useDispatch, useSelector } from 'react-redux'
-import { getTeamFn } from '@/redux/slices/teams/GetTeam'
-import { Spinner } from '@material-tailwind/react'
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { createTeamFn, resetCreateTeam } from "@/redux/slices/teams/CreateTeam";
+import { getTeamFn } from "@/redux/slices/teams/GetTeam";
+import type { RootState } from "@/redux/store";
+import { PlusCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 export default function CreateDialogTeam() {
-  const createTeam = useSelector((state) => state.createTeam)
-  const dispatch = useDispatch()
-  const [isOpen, setIsOpen] = useState(false)
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [imageUrl, setImage] = useState(null)
-  const [skill, setSkill] = useState(null)
-  const [imagePreview, setImagePreview] = useState(null)
+  const createTeam = useSelector((state: RootState) => state.createTeam);
+  const dispatch = useDispatch();
+  const [isOpen, setIsOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [imageUrl, setImage] = useState(null);
+  const [skill, setSkill]: string | any = useState(null);
+  const [_, setImagePreview] = useState(null);
 
-  const handleImageChange = (e) => {
-    const file = e.target.files?.[0]
+  const handleImageChange = (e: any) => {
+    const file = e.target.files?.[0];
     if (file) {
-      setImage(file)
-      const reader = new FileReader()
+      setImage(file);
+      const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result)
-      }
-      reader.readAsDataURL(file)
+        //@ts-ignore
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
 
     const data = {
       name,
       description,
       skill,
       imageUrl,
-    }
-
-    dispatch(createTeamFn(data))
-    dispatch(getTeamFn())
+    };
+    //@ts-ignore
+    dispatch(createTeamFn(data));
+    //@ts-ignore
+    dispatch(getTeamFn());
     // setIsOpen(false)
-  }
+  };
 
-  const navigate = useNavigate()
-  const toastId = 'toastCreateTeam'
+  const toastId = "toastCreateTeam";
 
   useEffect(() => {
     if (createTeam?.isSuccess) {
-      toast.success('Team created successfully', { id: toastId })
-      dispatch(resetCreateTeam())
-      dispatch(getTeamFn())
-      setIsOpen(false)
-      setSkill('')
-      setDescription('')
-      setName('')
-      setImagePreview('')
+      toast.success("Team created successfully", { id: toastId });
+      dispatch(resetCreateTeam());
+      //@ts-ignore
+      dispatch(getTeamFn());
+      setIsOpen(false);
+      setSkill(null);
+      setDescription("");
+      setName("");
+      setImagePreview(null);
     }
 
     if (createTeam?.isError) {
-      toast.error(createTeam?.message, { id: toastId })
+      toast.error(createTeam?.message, { id: toastId });
     }
   }, [
     createTeam?.isError,
     createTeam?.message,
     createTeam?.isSuccess,
     dispatch,
-  ])
+  ]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -160,12 +162,10 @@ export default function CreateDialogTeam() {
             >
               Cancel
             </Button>
-            <Button type="submit">
-              Create Team
-            </Button>
+            <Button type="submit">Create Team</Button>
           </div>
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

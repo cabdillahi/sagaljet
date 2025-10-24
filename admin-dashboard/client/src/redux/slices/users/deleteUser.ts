@@ -49,7 +49,7 @@ export const deleteUserSlice = createSlice({
       state.isSuccess = false;
       state.message = ""; // Clear previous errors
     });
-    builder.addCase(deleteUserFn.fulfilled, (state, action) => {
+    builder.addCase(deleteUserFn.fulfilled, (state, _) => {
       state.isLoading = false;
       state.isSuccess = true;
       state.message = "User deleted successfully";

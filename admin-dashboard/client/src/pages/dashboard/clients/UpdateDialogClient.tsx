@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -7,30 +7,31 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Link, useNavigate } from "react-router-dom";
-import { PlusCircle } from "lucide-react";
+import { getClientFn } from "@/redux/slices/clients/GetClient";
 import {
-  createClientFn,
-  resetCreateClient,
-} from "@/redux/slices/clients/CreateClient";
+  resetUpdateClient,
+  updateClientFn,
+} from "@/redux/slices/clients/UpdateClient";
+import type { RootState } from "@/redux/store";
+import { Pencil } from "lucide-react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { getClientFn } from "@/redux/slices/clients/GetClient";
+import { Link } from "react-router-dom";
 
-export default function CreateDialogClient() {
-  const createClient = useSelector((state) => state.createClient);
+export default function UpdateDialogClient({ client }: any) {
+  const updateClient = useSelector((state: RootState) => state.updateClient);
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [logoUrl, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [name, setName] = useState(client.name || "");
+  const [description, setDescription] = useState(client.description || "");
+  const [logoUrl, setImage] = useState(client.logoUrl || null);
+  const [imagePreview, setImagePreview] = useState(client.logoUrl || null);
 
-  const handleImageChange = (e) => {
+  const handleImageChange = (e: any) => {
     const file = e.target.files?.[0];
     if (file) {
       setImage(file);
@@ -42,58 +43,60 @@ export default function CreateDialogClient() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
 
     const data = {
       description,
       logoUrl,
       name,
+      id: +client.id,
     };
 
-    dispatch(createClientFn(data));
+    //@ts-ignore
+    dispatch(updateClientFn(data));
+    //@ts-ignore
+    dispatch(getClientFn());
+    //@ts-ignore
+    isOpen(false);
   };
 
-  const navigate = useNavigate();
-  const toastId = "toastsingIn";
+  const toastId = "toastUpdate";
 
   useEffect(() => {
-    if (createClient?.isSuccess) {
+    if (updateClient?.isSuccess) {
       toast.success("success", { id: toastId });
+      dispatch(resetUpdateClient());
+      //@ts-ignore
       dispatch(getClientFn());
-      dispatch(resetCreateClient());
       setIsOpen(false);
-      setDescription("");
-      setName("");
-      setImagePreview("");
     }
 
-    if (createClient?.isError) {
-      toast.error(createClient?.message, { id: toastId });
+    if (updateClient?.isError) {
+      toast.error(updateClient?.message, { id: toastId });
     }
   }, [
-    createClient?.isError,
-    createClient?.message,
-    createClient?.isSuccess,
+    updateClient?.isError,
+    updateClient?.message,
+    updateClient?.isSuccess,
     dispatch,
-    getClientFn,
   ]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button asChild>
-          <Link href="">
-            <PlusCircle className="mr-2 h-4 w-4" />
-            create Client
+        <Button variant="outline" size="sm" asChild>
+          <Link to={""}>
+            <Pencil className="h-4 w-4 mr-2" />
+            Edit
           </Link>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] md:max-w-[600px] lg:max-w-[700px]">
         <DialogHeader>
-          <DialogTitle>Create New Client</DialogTitle>
+          <DialogTitle>Update Client</DialogTitle>
           <DialogDescription>
-            Fill in the details to create a new Client.
+            Fill in the details to update Client.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -132,8 +135,6 @@ export default function CreateDialogClient() {
               <img
                 src={imagePreview}
                 alt="Project image preview"
-                layout="fill"
-                objectFit="cover"
                 className="rounded-lg"
               />
             </div>
@@ -146,10 +147,7 @@ export default function CreateDialogClient() {
             >
               Cancel
             </Button>
-            <Button type="submit">
-              
-              {createClient.isLoading ? "loading..." : "Create Client"}{" "}
-            </Button>
+            <Button type="submit">Update Client</Button>
           </div>
         </form>
       </DialogContent>

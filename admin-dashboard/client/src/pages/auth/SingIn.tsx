@@ -8,7 +8,7 @@ import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { resetSingIn, singInFn } from "../../redux/slices/auth/SingIn";
 import { setUser } from "../../redux/slices/auth/UserInfo";
-import { RootState } from "../../redux/store";
+import type { RootState } from "@/redux/store";
 
 export default function SignIn() {
   const singIn = useSelector((state: RootState) => state.singin);

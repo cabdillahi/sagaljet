@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -7,48 +7,39 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { AlertCircle, Trash2 } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteProjectFn,
-  deleteProjectReset,
-} from "@/redux/slices/projects/DeleteProject";
-import { getProjectFn } from "@/redux/slices/projects/GetProject";
-import toast from "react-hot-toast";
+import { deleteCategoryFn } from "@/redux/slices/category/DeleteCategory";
+import { getCategoryFn } from "@/redux/slices/category/GetCategory";
 import type { RootState } from "@/redux/store";
+import { AlertCircle, Trash2 } from "lucide-react";
+import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
 
-export default function DeleteDialogProject({ project }: any) {
+const DeleteDialogCategory = ({ category }: any) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const deleteProject = useSelector((state: RootState) => state.deleteProject);
+  const deleteCategory = useSelector(
+    (state: RootState) => state.deleteCategory
+  );
 
   const dispatch = useDispatch();
 
   const deleteHandle = () => {
     //@ts-ignore
-    dispatch(getProjectFn());
-    //@ts-ignore
-    dispatch(deleteProjectFn(project));
+    dispatch(deleteCategoryFn(+category));
     setIsOpen(false);
   };
 
-  const toastId = "projectId";
+  const toastId = "categoryId";
 
   useEffect(() => {
-    if (deleteProject.isSuccess) {
-      toast.success("deleted successfully...", { id: toastId });
+    if (deleteCategory.isSuccess) {
+      toast.success("Deleted successfully...", { id: toastId });
     }
     //@ts-ignore
-    dispatch(getProjectFn());
-    dispatch(deleteProjectReset());
-    setIsOpen(false);
-  }, [
-    deleteProject?.isError,
-    deleteProject?.message,
-    deleteProject?.isSuccess,
-    dispatch,
-  ]);
+    dispatch(getCategoryFn());
+  }, [deleteCategory.isSuccess, dispatch]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -65,7 +56,7 @@ export default function DeleteDialogProject({ project }: any) {
             Confirm Deletion
           </DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete this ? This action cannot be undone.
+            Are you sure you want to delete this? This action cannot be undone.
           </DialogDescription>
         </DialogHeader>
         <div className="flex justify-end space-x-2 mt-6">
@@ -79,4 +70,10 @@ export default function DeleteDialogProject({ project }: any) {
       </DialogContent>
     </Dialog>
   );
-}
+};
+
+DeleteDialogCategory.propTypes = {
+  category: PropTypes.number.isRequired,
+};
+
+export default DeleteDialogCategory;

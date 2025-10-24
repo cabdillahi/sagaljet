@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -6,45 +6,43 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { getTeamFn } from '@/redux/slices/teams/GetTeam'
-import {
-  resetUpdateTeam,
-  updateTeamFn,
-} from '@/redux/slices/teams/UpdateTeam'
-import { Pencil } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
-import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { getTeamFn } from "@/redux/slices/teams/GetTeam";
+import { resetUpdateTeam, updateTeamFn } from "@/redux/slices/teams/UpdateTeam";
+import type { RootState } from "@/redux/store";
+import { Pencil } from "lucide-react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
-export default function UpdateDialogTeam({ team }) {
-  const updateTeam = useSelector((state) => state.updateTeam)
-  const dispatch = useDispatch()
-  const [isOpen, setIsOpen] = useState(false)
-  const [name, setName] = useState(team.name || '')
-  const [description, setDescription] = useState(team.description || '')
-  const [skill, setSkill] = useState(team.skill || '')
-  const [imageUrl, setImage] = useState(team.imageUrl || null)
-  const [imagePreview, setImagePreview] = useState(team.imageUrl || null)
+export default function UpdateDialogTeam({ team }: any) {
+  const updateTeam = useSelector((state: RootState) => state.updateTeam);
+  const dispatch = useDispatch();
+  const [isOpen, setIsOpen] = useState(false);
+  const [name, setName] = useState(team.name || "");
+  const [description, setDescription] = useState(team.description || "");
+  const [skill, setSkill] = useState(team.skill || "");
+  const [imageUrl, setImage] = useState(team.imageUrl || null);
+  const [imagePreview, setImagePreview] = useState(team.imageUrl || null);
 
-  const handleImageChange = (e) => {
-    const file = e.target.files?.[0]
+  const handleImageChange = (e: any) => {
+    const file = e.target.files?.[0];
     if (file) {
-      setImage(file)
-      const reader = new FileReader()
+      setImage(file);
+      const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result)
-      }
-      reader.readAsDataURL(file)
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
 
     const data = {
       name,
@@ -52,38 +50,41 @@ export default function UpdateDialogTeam({ team }) {
       skill,
       imageUrl,
       id: +team.id,
-    }
+    };
 
-    dispatch(updateTeamFn(data))
-    dispatch(getTeamFn())
-    setIsOpen(false)
-  }
+    //@ts-ignore
+    dispatch(updateTeamFn(data));
+    //@ts-ignore
+    dispatch(getTeamFn());
+    setIsOpen(false);
+  };
 
-  const toastId = 'toastUpdate'
+  const toastId = "toastUpdate";
 
   useEffect(() => {
     if (updateTeam?.isSuccess) {
-      toast.success('Team updated successfully', { id: toastId })
-      dispatch(resetUpdateTeam())
-      dispatch(getTeamFn())
-      setIsOpen(false)
+      toast.success("Team updated successfully", { id: toastId });
+      dispatch(resetUpdateTeam());
+      //@ts-ignore
+      dispatch(getTeamFn());
+      setIsOpen(false);
     }
 
     if (updateTeam?.isError) {
-      toast.error(updateTeam?.message, { id: toastId })
+      toast.error(updateTeam?.message, { id: toastId });
     }
   }, [
     updateTeam?.isError,
     updateTeam?.message,
     updateTeam?.isSuccess,
     dispatch,
-  ])
+  ]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm" asChild>
-          <Link>
+          <Link to={""}>
             <Pencil className="h-4 w-4 mr-2" />
             Edit Team
           </Link>
@@ -120,13 +121,13 @@ export default function UpdateDialogTeam({ team }) {
           <div className="space-y-2">
             <Label htmlFor="skill">Skill</Label>
             <Input
-                id="skill"
-                value={skill}
-                onChange={(e) => setSkill(e.target.value)}
-                placeholder="Enter team skill"
-                required
+              id="skill"
+              value={skill}
+              onChange={(e) => setSkill(e.target.value)}
+              placeholder="Enter team skill"
+              required
             />
-            </div>
+          </div>
           <div className="space-y-2">
             <Label htmlFor="image">Image</Label>
             <Input
@@ -142,8 +143,6 @@ export default function UpdateDialogTeam({ team }) {
               <img
                 src={imagePreview}
                 alt="Team image preview"
-                layout="fill"
-                objectFit="cover"
                 className="rounded-lg"
               />
             </div>
@@ -161,5 +160,5 @@ export default function UpdateDialogTeam({ team }) {
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

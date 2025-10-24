@@ -7,7 +7,7 @@ import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { resetSingUp, singUpFn } from "../../redux/slices/auth/SingUp";
-import { RootState } from "../../redux/store";
+import type { RootState } from "@/redux/store";
 export default function SignUp() {
   const singIn = useSelector((state: RootState) => state.singup);
   const dispatch = useDispatch();

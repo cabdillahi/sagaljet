@@ -19,17 +19,21 @@ import {
 } from "@/redux/slices/category/UpdateCategory";
 import { Pencil } from "lucide-react";
 import toast from "react-hot-toast";
+import type { RootState } from "@/redux/store";
 
-const UpdateDialogCategory = ({ category }) => {
-  const updateCategory = useSelector((state) => state.updateCategory);
+const UpdateDialogCategory = ({ category }: any) => {
+  const updateCategory = useSelector(
+    (state: RootState) => state.updateCategory
+  );
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState(category.name || "");
   const [description, setDescription] = useState(category.description || "");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const updatedCategory = { id: category.id, name, description };
+    //@ts-ignore
     dispatch(updateCategoryFn(updatedCategory));
     setIsOpen(false);
   };
@@ -38,6 +42,7 @@ const UpdateDialogCategory = ({ category }) => {
     if (updateCategory.isSuccess) {
       toast.success("Category updated successfully");
       dispatch(resetUpdateCategory());
+      //@ts-ignore
       dispatch(getCategoryFn());
     }
     if (updateCategory.isError) {

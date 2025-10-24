@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -6,92 +6,96 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { getClientFn } from '@/redux/slices/clients/GetClient'
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
-  resetUpdateClient,
-  updateClientFn,
-} from '@/redux/slices/clients/UpdateClient'
-import { Pencil } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
-import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+  createClientFn,
+  resetCreateClient,
+} from "@/redux/slices/clients/CreateClient";
+import { getClientFn } from "@/redux/slices/clients/GetClient";
+import type { RootState } from "@/redux/store";
+import { PlusCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
-export default function UpdateDialogClient({ client }) {
-  const updateClient = useSelector((state) => state.updateClient)
-  const dispatch = useDispatch()
-  const [isOpen, setIsOpen] = useState(false)
-  const [name, setName] = useState(client.name || '')
-  const [description, setDescription] = useState(client.description || '')
-  const [logoUrl, setImage] = useState(client.logoUrl || null)
-  const [imagePreview, setImagePreview] = useState(client.logoUrl || null)
+export default function CreateDialogClient() {
+  const createClient = useSelector((state: RootState) => state.createClient);
+  const dispatch = useDispatch();
+  const [isOpen, setIsOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [logoUrl, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
-  const handleImageChange = (e) => {
-    const file = e.target.files?.[0]
+  const handleImageChange = (e: any) => {
+    const file = e.target.files?.[0];
     if (file) {
-      setImage(file)
-      const reader = new FileReader()
+      setImage(file);
+      const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result)
-      }
-      reader.readAsDataURL(file)
+        //@ts-ignore
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
 
     const data = {
       description,
       logoUrl,
       name,
-      id: +client.id,
-    }
+    };
+    //@ts-ignore
+    dispatch(createClientFn(data));
+  };
 
-    dispatch(updateClientFn(data))
-    dispatch(getClientFn())
-    isOpen(false)
-  }
-
-  const toastId = 'toastUpdate'
+  const toastId = "toastsingIn";
 
   useEffect(() => {
-    if (updateClient?.isSuccess) {
-      toast.success('success', { id: toastId })
-      dispatch(resetUpdateClient())
-      dispatch(getClientFn())
-      setIsOpen(false)
+    if (createClient?.isSuccess) {
+      toast.success("success", { id: toastId });
+      //@ts-ignore
+      dispatch(getClientFn());
+      dispatch(resetCreateClient());
+      setIsOpen(false);
+      setDescription("");
+      setName("");
+      setImagePreview(null);
     }
 
-    if (updateClient?.isError) {
-      toast.error(updateClient?.message, { id: toastId })
+    if (createClient?.isError) {
+      toast.error(createClient?.message, { id: toastId });
     }
   }, [
-    updateClient?.isError,
-    updateClient?.message,
-    updateClient?.isSuccess,
+    createClient?.isError,
+    createClient?.message,
+    createClient?.isSuccess,
     dispatch,
-  ])
+    getClientFn,
+  ]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" asChild>
-          <Link>
-            <Pencil className="h-4 w-4 mr-2" />
-            Edit
+        <Button asChild>
+          <Link to="">
+            <PlusCircle className="mr-2 h-4 w-4" />
+            create Client
           </Link>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] md:max-w-[600px] lg:max-w-[700px]">
         <DialogHeader>
-          <DialogTitle>Update Client</DialogTitle>
+          <DialogTitle>Create New Client</DialogTitle>
           <DialogDescription>
-            Fill in the details to update Client.
+            Fill in the details to create a new Client.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -130,8 +134,6 @@ export default function UpdateDialogClient({ client }) {
               <img
                 src={imagePreview}
                 alt="Project image preview"
-                layout="fill"
-                objectFit="cover"
                 className="rounded-lg"
               />
             </div>
@@ -144,10 +146,12 @@ export default function UpdateDialogClient({ client }) {
             >
               Cancel
             </Button>
-            <Button type="submit">Update Client</Button>
+            <Button type="submit">
+              {createClient.isLoading ? "loading..." : "Create Client"}{" "}
+            </Button>
           </div>
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -8,12 +8,9 @@ import {
   X,
   Zap,
 } from "lucide-react";
-import { IoLogoFlickr } from "react-icons/io";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
-export default function Sidebar({ isOpen, toggleSidebar }:any) {
-  const location = useLocation();
-
+export default function Sidebar({ isOpen, toggleSidebar }: any) {
   const menuItems = [
     {
       name: "Project",
@@ -30,11 +27,6 @@ export default function Sidebar({ isOpen, toggleSidebar }:any) {
       name: "Client",
       icon: UsersRound,
       link: "/client",
-    },
-    {
-      name: "Logos",
-      icon: IoLogoFlickr,
-      link: "/logos",
     },
     { name: "User", icon: User, link: "/users" },
     {

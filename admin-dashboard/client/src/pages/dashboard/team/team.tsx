@@ -35,9 +35,10 @@ import {
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { updateTeamOrderFn } from "@/redux/slices/teams/Team-Order";
+import type { RootState } from "@/redux/store";
 
 // Sortable Item Component for Mobile Cards
-function SortableTeamCard({ team, index }) {
+function SortableTeamCard({ team }: any) {
   const {
     attributes,
     listeners,
@@ -104,7 +105,7 @@ function SortableTeamCard({ team, index }) {
 }
 
 // Sortable Item Component for Desktop Table Rows
-function SortableTableRow({ team, index }) {
+function SortableTableRow({ team }: any) {
   const {
     attributes,
     listeners,
@@ -167,7 +168,7 @@ function SortableTableRow({ team, index }) {
 export default function Team() {
   const [isMobile, setIsMobile] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const teams = useSelector((state) => state.getTeam);
+  const teams: any = useSelector((state: RootState) => state.getTeam);
   const dispatch = useDispatch();
 
   const sensors = useSensors(
@@ -182,6 +183,7 @@ export default function Team() {
   );
 
   useEffect(() => {
+    //@ts-ignore
     dispatch(getTeamFn());
     const checkIsMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -193,7 +195,7 @@ export default function Team() {
 
   const teamsData = teams?.data || [];
 
-  const handleDragEnd = async (event) => {
+  const handleDragEnd = async (event: any) => {
     const { active, over } = event;
 
     if (!over || active.id === over.id) {
@@ -203,8 +205,8 @@ export default function Team() {
     const activeId = Number.parseInt(active.id);
     const overId = Number.parseInt(over.id);
 
-    const oldIndex = teamsData.findIndex((team) => team.id === activeId);
-    const newIndex = teamsData.findIndex((team) => team.id === overId);
+    const oldIndex = teamsData.findIndex((team: any) => team.id === activeId);
+    const newIndex = teamsData.findIndex((team: any) => team.id === overId);
 
     if (oldIndex === -1 || newIndex === -1) {
       console.error("Could not find team indices", {
@@ -228,7 +230,7 @@ export default function Team() {
       const reorderedTeams = arrayMove([...teamsData], oldIndex, newIndex);
 
       // Create newOrder payload to match your backend API
-      const newOrder = reorderedTeams.map((team, index) => ({
+      const newOrder = reorderedTeams.map((team: any, index) => ({
         id: team.id,
         order: index + 1,
       }));
@@ -236,6 +238,7 @@ export default function Team() {
       console.log("New order payload:", newOrder);
 
       // Dispatch the update order action with newOrder as the payload
+      //@ts-ignore
       const resultAction = await dispatch(updateTeamOrderFn(newOrder));
 
       console.log("Update result:", resultAction);
@@ -244,6 +247,7 @@ export default function Team() {
       if (updateTeamOrderFn.fulfilled.match(resultAction)) {
         console.log("Team order updated successfully");
         // Refresh the teams data
+        //@ts-ignore
         await dispatch(getTeamFn());
       } else if (updateTeamOrderFn.rejected.match(resultAction)) {
         console.error("Failed to update team order:", resultAction.payload);
@@ -297,12 +301,12 @@ export default function Team() {
           onDragEnd={handleDragEnd}
         >
           <SortableContext
-            items={teamsData.map((team) => team.id.toString())}
+            items={teamsData.map((team: any) => team.id.toString())}
             strategy={verticalListSortingStrategy}
           >
             {isMobile ? (
               <div className="space-y-4 px-4">
-                {teamsData.map((team, index) => (
+                {teamsData.map((team: any, index: any) => (
                   <SortableTeamCard key={team.id} team={team} index={index} />
                 ))}
               </div>
@@ -314,7 +318,7 @@ export default function Team() {
                       <TableHead className="w-[50px]"></TableHead>
                       <TableHead className="w-[100px]">ID</TableHead>
                       <TableHead>Name</TableHead>
-                      <TableHead className="w-[80px]">Image</TableHead>
+                      <TableHead className="">Image</TableHead>
                       <TableHead>Description</TableHead>
                       <TableHead className="w-[120px]">Created At</TableHead>
                       <TableHead className="text-right w-[120px]">
@@ -323,7 +327,7 @@ export default function Team() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {teamsData.map((team, index) => (
+                    {teamsData.map((team: any, index: any) => (
                       <SortableTableRow
                         key={team.id}
                         team={team}

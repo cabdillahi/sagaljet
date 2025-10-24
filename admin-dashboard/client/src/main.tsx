@@ -4,7 +4,7 @@ import "./index.css";
 import { Provider } from "react-redux";
 import App from "./App";
 import { store } from "./redux/store";
-import { Toaster } from "./components/ui/toaster";
+import { Toaster } from "react-hot-toast";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

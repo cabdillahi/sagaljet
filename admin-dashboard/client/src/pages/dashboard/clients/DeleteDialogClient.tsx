@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -6,39 +6,42 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { AlertCircle, Trash2 } from 'lucide-react'
-import { useDispatch, useSelector } from 'react-redux'
-import { deleteClientFn } from '@/redux/slices/clients/DeleteClient'
-import { getClientFn } from '@/redux/slices/clients/GetClient'
-import toast from 'react-hot-toast'
-import { resetUpdateClient } from '@/redux/slices/clients/UpdateClient'
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { AlertCircle, Trash2 } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteClientFn } from "@/redux/slices/clients/DeleteClient";
+import { getClientFn } from "@/redux/slices/clients/GetClient";
+import toast from "react-hot-toast";
+import { resetUpdateClient } from "@/redux/slices/clients/UpdateClient";
+import type { RootState } from "@/redux/store";
 
-export default function DeleteDialogClinet({ client }) {
-  const [isOpen, setIsOpen] = useState(false)
+export default function DeleteDialogClinet({ client }: any) {
+  const [isOpen, setIsOpen] = useState(false);
 
-  const deleteClient = useSelector((state) => state.deleteClient)
+  const deleteClient = useSelector((state: RootState) => state.deleteClient);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const deleteHandle = () => {
-    dispatch(getClientFn())
-    dispatch(deleteClientFn(+client))
-    setIsOpen(false)
-  }
+    //@ts-ignore
+    dispatch(getClientFn());
+    //@ts-ignore
+    dispatch(deleteClientFn(+client));
+    setIsOpen(false);
+  };
 
-  const toastId = 'clientId'
+  const toastId = "clientId";
 
   useEffect(() => {
     if (deleteClient.isSuccess) {
-      toast.success('deleted successfully...', { id: toastId })
-      dispatch(resetUpdateClient())
+      toast.success("deleted successfully...", { id: toastId });
+      dispatch(resetUpdateClient());
     }
-
-    dispatch(getClientFn())
-    setIsOpen(false)
-  }, [])
+    //@ts-ignore
+    dispatch(getClientFn());
+    setIsOpen(false);
+  }, []);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -68,5 +71,5 @@ export default function DeleteDialogClinet({ client }) {
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

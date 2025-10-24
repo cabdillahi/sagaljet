@@ -46,7 +46,7 @@ export const updateOrderProject = createSlice({
       .addCase(updateProjectOrderFn.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
-        state.message = action.payload;
+        state.message = Object(action.payload);
       });
   },
 });

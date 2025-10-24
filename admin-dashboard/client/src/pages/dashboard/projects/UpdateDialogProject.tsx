@@ -1,77 +1,82 @@
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandItem,
   CommandList,
-} from '@/components/ui/command'
+} from "@/components/ui/command";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover'
-import { Textarea } from '@/components/ui/textarea'
-import { cn } from '@/lib/utils'
-import { getProjectFn } from '@/redux/slices/projects/GetProject'
+} from "@/components/ui/popover";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
+import { getProjectFn } from "@/redux/slices/projects/GetProject";
 import {
   resetUpdateProject,
   updateProjectFn,
-} from '@/redux/slices/projects/UpdateProject'
-import { Check, ChevronsUpDown, Pencil } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
-import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+} from "@/redux/slices/projects/UpdateProject";
+import type { RootState } from "@/redux/store";
+import { Check, ChevronsUpDown, Pencil } from "lucide-react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
-export default function UpdateDialogProject({ project, categories, category }) {
-  const updateProject = useSelector((state) => state.updateProject)
-  const dispatch = useDispatch()
-  const [isOpen, setIsOpen] = useState(false)
+export default function UpdateDialogProject({
+  project,
+  categories,
+  category,
+}: any) {
+  const updateProject = useSelector((state: RootState) => state.updateProject);
+  const dispatch = useDispatch();
+  const [isOpen, setIsOpen] = useState(false);
 
-  const [selectedCategory, setSelectedCategory] = useState(category || 0)
-  const [name, setName] = useState(project?.name || '')
-  const [description, setDescription] = useState(project?.description || '')
-  const [logoUrl, setImage] = useState(project?.imageUrl || null)
+  const [selectedCategory, setSelectedCategory] = useState(category || 0);
+  const [name, setName] = useState(project?.name || "");
+  const [description, setDescription] = useState(project?.description || "");
+  const [logoUrl, setImage] = useState(project?.imageUrl || null);
 
-  const [url, setUrl] = useState(project?.link || '')
-  const [client, setClient] = useState(project?.client || '')
+  const [url, setUrl] = useState(project?.link || "");
+  const [client, setClient] = useState(project?.client || "");
 
-  const [imagePreview, setImagePreview] = useState(project?.imageUrl || null)
+  const [imagePreview, setImagePreview] = useState(project?.imageUrl || null);
 
+  //@ts-ignore
   function onClickCategory(event) {
-    event.preventDefault()
+    event.preventDefault();
 
     if (!selectedCategory) {
-      alert('Please select a Category.')
-      return
+      alert("Please select a Category.");
+      return;
     }
   }
 
-  const handleImageChange = (e) => {
-    const file = e.target.files?.[0]
+  const handleImageChange = (e: any) => {
+    const file = e.target.files?.[0];
     if (file) {
-      setImage(file)
-      const reader = new FileReader()
+      setImage(file);
+      const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result)
-      }
-      reader.readAsDataURL(file)
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
 
     const data = {
       // description,
@@ -85,38 +90,40 @@ export default function UpdateDialogProject({ project, categories, category }) {
       imageUrl: logoUrl,
       link: url,
       categoryId: selectedCategory,
-    }
+    };
+    //@ts-ignore
+    dispatch(updateProjectFn(data));
+    //@ts-ignore
+    dispatch(getProjectFn());
+    setIsOpen(false);
+  };
 
-    dispatch(updateProjectFn(data))
-    dispatch(getProjectFn())
-    setIsOpen(false)
-  }
-
-  const toastId = 'toastUpdate'
+  const toastId = "toastUpdate";
 
   useEffect(() => {
     if (updateProject?.isSuccess) {
-      toast.success('success', { id: toastId })
-      dispatch(getProjectFn())
-      setIsOpen(false)
-      dispatch(resetUpdateProject())
+      toast.success("success", { id: toastId });
+      //@ts-ignore
+      dispatch(getProjectFn());
+      setIsOpen(false);
+      dispatch(resetUpdateProject());
     }
-    dispatch(resetUpdateProject())
+    dispatch(resetUpdateProject());
     if (updateProject?.isError) {
-      toast.error(updateProject?.message, { id: toastId })
+      toast.error(updateProject?.message, { id: toastId });
     }
   }, [
     updateProject?.isError,
     updateProject?.message,
     updateProject?.isSuccess,
     dispatch,
-  ])
+  ]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm" asChild>
-          <Link>
+          <Link to={""}>
             <Pencil className="h-4 w-4 mr-2" />
             Edit
           </Link>
@@ -165,8 +172,6 @@ export default function UpdateDialogProject({ project, categories, category }) {
               <img
                 src={imagePreview}
                 alt="Project image preview"
-                layout="fill"
-                objectFit="cover"
                 className="rounded-lg object-cover bg-center bg-no-repeat"
               />
             </div>
@@ -196,15 +201,15 @@ export default function UpdateDialogProject({ project, categories, category }) {
                   variant="outline"
                   role="combobox"
                   className={cn(
-                    'w-full justify-between',
-                    !selectedCategory && 'text-muted-foreground'
+                    "w-full justify-between",
+                    !selectedCategory && "text-muted-foreground"
                   )}
                 >
                   {selectedCategory
                     ? categories?.find(
-                        (category) => category.id === selectedCategory
+                        (category: any) => category.id === selectedCategory
                       )?.name
-                    : 'Select Category'}
+                    : "Select Category"}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
@@ -214,7 +219,7 @@ export default function UpdateDialogProject({ project, categories, category }) {
                   <CommandList>
                     <CommandEmpty>No Category found.</CommandEmpty>
                     <CommandGroup>
-                      {categories?.map((category) => (
+                      {categories?.map((category: any) => (
                         <CommandItem
                           value={category.id}
                           key={category.name}
@@ -222,10 +227,10 @@ export default function UpdateDialogProject({ project, categories, category }) {
                         >
                           <Check
                             className={cn(
-                              'mr-2 h-4 w-4',
+                              "mr-2 h-4 w-4",
                               category.id === selectedCategory
-                                ? 'opacity-100'
-                                : 'opacity-0'
+                                ? "opacity-100"
+                                : "opacity-0"
                             )}
                           />
                           {category.name}
@@ -250,5 +255,5 @@ export default function UpdateDialogProject({ project, categories, category }) {
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -1,11 +1,17 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { useDispatch } from 'react-redux';
-import { updateUserFn } from '@/redux/slices/users/updateUser';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { useDispatch } from "react-redux";
+import { updateUserFn } from "@/redux/slices/users/updateUser";
 
-export default function UpdateDialogUser({ user }) {
+export default function UpdateDialogUser({ user }: any) {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: user.name,
@@ -14,12 +20,13 @@ export default function UpdateDialogUser({ user }) {
   });
   const dispatch = useDispatch();
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = () => {
+    //@ts-ignore
     dispatch(updateUserFn({ id: user.id, ...formData }));
     setOpen(false);
   };

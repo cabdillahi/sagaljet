@@ -1,24 +1,25 @@
 import { Button } from "@/components/ui/button";
 import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { getBlogFn } from "@/redux/slices/blog/GetBlog";
 import { resetupdateBlog, updateBlogFn } from "@/redux/slices/blog/UpdateBlog";
+import type { RootState } from "@/redux/store";
 import { Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-export default function UpdateBlogDialog({ blog }) {
-  const updateBlog = useSelector((state) => state.updateBlog);
+export default function UpdateBlogDialog({ blog }: any) {
+  const updateBlog = useSelector((state: RootState) => state.updateBlog);
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -29,8 +30,7 @@ export default function UpdateBlogDialog({ blog }) {
 
   const [imagePreview, setImagePreview] = useState(blog?.imageUrl || null);
 
-
-  const handleImageChange = (e) => {
+  const handleImageChange = (e: any) => {
     const file = e.target.files?.[0];
     if (file) {
       setImage(file);
@@ -42,7 +42,7 @@ export default function UpdateBlogDialog({ blog }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
 
     const data = {
@@ -52,7 +52,7 @@ export default function UpdateBlogDialog({ blog }) {
       image,
       author,
     };
-
+    //@ts-ignore
     dispatch(updateBlogFn(data));
   };
 
@@ -61,6 +61,7 @@ export default function UpdateBlogDialog({ blog }) {
   useEffect(() => {
     if (updateBlog?.isSuccess) {
       toast.success("success", { id: toastId });
+      //@ts-ignore
       dispatch(getBlogFn());
       setIsOpen(false);
       dispatch(resetupdateBlog());
@@ -79,7 +80,7 @@ export default function UpdateBlogDialog({ blog }) {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm" asChild>
-          <Link>
+          <Link to={""}>
             <Pencil className="h-4 w-4 mr-2" />
             Edit
           </Link>
@@ -138,8 +139,6 @@ export default function UpdateBlogDialog({ blog }) {
               <img
                 src={imagePreview}
                 alt="blog image preview"
-                layout="fill"
-                objectFit="cover"
                 className="rounded-lg object-cover bg-center bg-no-repeat"
               />
             </div>
